@@ -191,9 +191,7 @@ A Issue #3274 estabelece explicitamente como critério de aceite:
 
 Essa preocupação demonstra que a equipe reconhece a importância de evitar que problemas semelhantes retornem em futuras alterações.
 
-**Print sugerido:**
-
-- Critérios de aceite da Issue.
+![Resolução da Issue](resolvido.png)
 
 ---
 
