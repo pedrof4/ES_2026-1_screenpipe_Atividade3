@@ -20,10 +20,6 @@ Esta é a análise de testes, focando na robustez da suite de testes, cobertura 
 # 3. Pipeline de CI (GitHub Actions)
  
 #### (a) Evidência: Arquivos de configuração localizados no diretório .github/workflows/. O pipeline executa múltiplos jobs, incluindo validações cross-platform que geram artefatos finais de testes em matrizes para Windows, Linux e macOS (conforme indicado pelas tags de correções de E2E do Windows e Linux vistas no histórico de commits do repositório).
-
-<img width="1920" height="998" alt="image" src="Evidência 3.png" />
-
 #### (b) Diagnóstico: A pipeline é complexa e automatizada, gerando builds e rodando testes automatizados a cada push. No entanto, por compilar grandes dependências nativas e modelos pesados, o tempo de execução do pipeline de CI se torna longo e caro. Além disso, testes ponta a ponta (E2E) que exigem interface gráfica real e permissões de segurança do SO (TCC no macOS, por exemplo) encontram barreiras crônicas para rodar de forma fidedigna nos runners virtuais padronizados do GitHub Actions.
 #### (c) Risco: Médio. O pipeline garante que o código compila e passa por checagens estáticas básicas em múltiplos SOs, mas falsos-positivos ou testes ignorados (flaky tests) devido a limitações ambientais de sandbox reduzem a confiabilidade da esteira.
 #### (d) Recomendação: Mudar o paradigma de testes de UI/E2E para rodar em instâncias com runners dedicados (Self-Hosted Runners) configurados especificamente com as permissões de gravação de tela necessárias virtuais emuladas, limpando os testes instáveis do pipeline de CI principal.
-
