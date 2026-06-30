@@ -35,9 +35,9 @@ Na própria Issue, um dos critérios obrigatórios para aprovação da solução
 
 - <https://github.com/screenpipe/screenpipe/issues/3274>
 
-**Print sugerido:**
-
-- Seção **Acceptance** da Issue #3274.
+**Evidência Visual:**
+![Critérios de Aceite da Issue 3274](acceptance.png)
+*Figura: Critérios de aceitação exigindo criação de testes na Issue #3274.*
 
 ---
 
