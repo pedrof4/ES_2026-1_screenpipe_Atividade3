@@ -3,11 +3,6 @@ Esta é a análise de testes, focando na robustez da suite de testes, cobertura 
 # 1. Testes Unitários e de Integração (Rust Core)
 
 #### (a) Evidência: No repositório original, os testes unitários e de integração de Rust ficam localizados inline nos arquivos de cada módulo dentro de crates/ (utilizando o macro #[cfg(test)]) e em arquivos de teste na raiz de sub-crates específicos (como crates/screenpipe-core/tests/). Há também um arquivo de manifesto geral TESTING.md na raiz do projeto detalhando como rodar a suite localmente através do comando cargo test.
-
-<img width="1920" height="998" alt="image" src="Evidência 1-1.png" />
-<img width="1920" height="998" alt="image" src="Evidência 1-2.png" />
-
-
 #### (b) Diagnóstico: O ecossistema Rust incentiva testes acoplados ao código. O Screenpipe possui testes focados na integridade de leitura/escrita do banco SQLite local e validações lógicas de filtros de texto. Contudo, devido à dependência extrema de APIs nativas de sistema operacional (como o subsistema de áudio CoreAudio do macOS ou Windows Graphics Capture), a execução de testes puramente unitários e isolados de hardware é limitada. Muitos testes precisam de emulação ou dependem do ambiente host configurado corretamente.
 #### (c) Risco: Médio. Testes em Rust tendem a garantir segurança de memória, mas a falta de testes que simulem falhas em drivers de vídeo ou perda de permissão de acessibilidade em tempo de execução pode gerar quebras silenciosas no usuário final.
 #### (d) Recomendação: Implementar uma camada de mocking de hardware rigorosa usando frameworks de Rust para isolar as chamadas de sistema (System Calls), permitindo testar comportamentos de falha de hardware na suite unitária tradicional sem depender do SO host.
