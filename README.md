@@ -103,3 +103,33 @@ Como resultado, foi elaborado um plano de evolução incremental visando aumenta
 ## 📄 Licença
 
 Este repositório possui finalidade exclusivamente acadêmica e foi desenvolvido como parte das atividades da disciplina de Engenharia de Software.
+
+
+
+## Resumo do Projeto
+
+O trabalho analisou a estratégia de testes do **Screenpipe**, um sistema desktop multiplataforma que integra captura de tela/áudio, OCR, Accessibility API e processamento local com IA — um domínio tecnicamente complexo por depender fortemente de recursos nativos do sistema operacional.
+
+**O que foi encontrado (Eixos A/B/C):**
+- Uma estrutura de testes **multicamadas**: testes unitários em Rust (`#[cfg(test)]`), testes de integração, suíte E2E via Tauri/WebDriver (Windows, macOS, Linux) e uma checklist de **regressão manual** robusta em `TESTING.md`.
+- Forte integração com CI/CD (GitHub Actions), com pipelines para lint, segurança (CodeQL, trufflehog) e cobertura (`cargo llvm-cov`), além de hooks de pré-commit via Lefthook para validações rápidas locais.
+- Apesar dessa maturidade aparente, a análise identificou **lacunas reais**: a Issue #3274 mostrou que uma falha crítica na captura híbrida (OCR + Accessibility API) em apps como Zoom, Meet e Teams só gerou testes *depois* do bug reportado pela comunidade — evidência de que a proteção contra regressões é, em parte, reativa.
+- Módulos de captura de tela e OCR concentram a maior dívida técnica (comentários "HACK", mecanismos de retry), sendo os pontos de maior risco de regressão.
+- Dependências externas (OpenAI, Anthropic, Ollama, APIs nativas do SO) carecem de isolamento consistente via mocks/stubs, o que compromete a previsibilidade dos testes.
+- Cobertura de código é monitorada, mas oscila bastante em fluxos de exceção (timeouts, falhas parciais de OCR, picos de CPU), justamente os cenários mais críticos em produção.
+
+**Plano de evolução (Eixo D):**
+A partir desses achados, foi proposto um plano de melhoria gradual, priorizando:
+1. Testes de contrato para o pipeline de captura/OCR;
+2. Testes de regressão para operações críticas do banco de dados;
+3. Testes unitários para processamento de áudio;
+4. Integração de gates de cobertura de código no CI;
+5. Política obrigatória de "bug fix = teste automatizado associado".
+
+## Conclusão
+
+O Screenpipe demonstra uma **maturidade de testes acima da média** para um projeto de código aberto dessa complexidade: possui automação em múltiplas camadas, documentação de processo e integração contínua consolidada. No entanto, essa robustez estrutural convive com uma fragilidade de fundo — **grande parte da cobertura de cenários críticos foi construída reativamente**, após falhas reais reportadas pela comunidade, e não de forma preventiva.
+
+O maior risco do projeto está concentrado exatamente onde está seu diferencial de produto: a captura híbrida multimodal (tela + áudio + OCR + IA local), que depende de APIs de sistema operacional difíceis de simular e testar de forma determinística. Isso torna a suíte atual capaz de pegar regressões pontuais, mas ainda **insuficiente para garantir, de forma proativa, a integridade de fluxos que envolvem múltiplos componentes simultaneamente**.
+
+O plano de evolução proposto no Eixo D endereça diretamente esse gap ao priorizar testes de contrato, isolamento de dependências externas e políticas de qualidade vinculadas a correções — um caminho coerente para transformar uma estratégia de testes reativa em uma estratégia verdadeiramente preventiva, essencial para sustentar o crescimento do Screenpipe sem comprometer a confiabilidade do produto.
